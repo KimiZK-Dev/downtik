@@ -132,10 +132,6 @@ $(async function () {
 
     // Background chờ
     var waittime = 0;
-    // function updateWaitTime() {
-    //   waittime++;
-    //   $(".timeWaiting").text(`Thời gian chờ xử lí: ${waittime}s`);
-    // }
     const loadDown = $("<div>", { class: "loader-wrapper" })
       .append(
         $("<span>", { class: "loader" }).append(
@@ -147,11 +143,6 @@ $(async function () {
           "Đang xử lí, vui lòng chờ..."
         )
       );
-
-    // Thiết lập setInterval để cập nhật giá trị thời gian đợi mỗi 1000ms (1 giây)
-
-    // setInterval(updateWaitTime, 1000);
-
     $("#s3").css("display", "none");
     $("body").append(loadDown);
 
