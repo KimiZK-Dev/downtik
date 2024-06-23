@@ -1,5 +1,5 @@
 $(async function () {
-  const API = "https://apidown.site/api/tiktok/v1?link=";
+  const API = "https://www.tikwm.com/api/?url=";
   const el = {
     loadGIF: $(".loadGIF"),
 
@@ -29,6 +29,7 @@ $(async function () {
     try {
       const res = await axios.get(`${api}${input}`);
       if (res.data.code === 0) {
+        console.log(res.data);
         return res.data.data;
       } else {
         alert(
@@ -123,8 +124,8 @@ $(async function () {
         icon: "fa-duotone fa-file",
         className: "size",
         text: `Dung lượng: ${
-          data.hd_size
-            ? (data.hd_size / 1000000).toFixed(3) + "MB"
+          data.size
+            ? (data.size / 1000000).toFixed(3) + "MB"
             : "Mỗi ảnh kích thước khác nhau!"
         }`,
       },
@@ -171,13 +172,13 @@ $(async function () {
 
       el.preVid.attr("src", data.ai_dynamic_cover);
       getDownUrl(el.downAudio, data.music);
-      getDownUrl(el.downVid, data.hdplay);
+      getDownUrl(el.downVid, data.play);
 
-      const { url } = await getDownUrl(el.downVid, data.hdplay);
+      const { url } = await getDownUrl(el.downVid, data.play);
       if ($(".downVid").attr("href") == url) {
         $("#s3").css("display", "block");
         $(".loader-wrapper").remove();
-        console.log(await getDownUrl(el.downVid, data.hdplay));
+        console.log(await getDownUrl(el.downVid, data.play));
       }
     }
 
