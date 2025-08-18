@@ -1,0 +1,80 @@
+/**
+ * TikTok Downloader - Main Stylesheet
+ * Modular CSS architecture for better maintainability
+ */
+
+/* Import CSS Modules */
+@import url('./variables.css');
+@import url('./reset.css');
+@import url('./components.css');
+@import url('./layout.css');
+@import url('./content.css');
+
+/* Additional utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+.mt-auto { margin-top: auto; }
+.mb-auto { margin-bottom: auto; }
+
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+
+.transition-all { transition: all var(--transition-normal); }
+
+/* Focus styles for accessibility */
+*:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* Selection styles */
+::selection {
+    background-color: var(--accent-light);
+    color: var(--accent-primary);
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .app-header,
+    .app-footer,
+    .download-actions,
+    .toast-container,
+    .loading-overlay,
+    .modal-overlay {
+        display: none !important;
+    }
+}
