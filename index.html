@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Downloader - Tải video TikTok chất lượng cao</title>
+    <meta name="description" content="Công cụ tải video, hình ảnh và âm thanh TikTok miễn phí, nhanh chóng và an toàn.">
+    <meta name="keywords" content="tiktok downloader, tải video tiktok, download tiktok">
+    <meta name="author" content="TikTok Downloader">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/?size=256&id=r9iTXSDl1xJ9&format=png"/>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="TikTok Downloader - Tải video TikTok chất lượng cao" />
+    <meta property="og:description" content="Công cụ tải video, hình ảnh và âm thanh TikTok miễn phí, nhanh chóng và an toàn." />
+    <meta property="og:type" content="website" />
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+    <script type="module" src="./js/script.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="brand">
+                    <span class="brand-icon"></span>
+                    <span class="brand-text">TikTok Downloader</span>
+                </div>
+                
+                <nav class="header-nav">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <i class="fas fa-sun theme-icon-light"></i>
+                        <i class="fas fa-moon theme-icon-dark"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Tải video TikTok
+                        <span class="highlight">chất lượng cao</span>
+                    </h1>
+                    <p class="hero-description">
+                        Công cụ miễn phí để tải video, hình ảnh và âm thanh từ TikTok. 
+                        Nhanh chóng, an toàn và không có watermark.
+                    </p>
+                </div>
+                
+                <!-- Download Form -->
+                <div class="download-section">
+                    <form class="download-form" id="downloadForm">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input 
+                                    type="url" 
+                                    class="url-input" 
+                                    id="tiktokUrl" 
+                                    name="tiktokUrl"
+                                    placeholder="Dán link TikTok vào đây..."
+                                    required
+                                    autocomplete="off"
+                                >
+                            </div>
+                            <button type="submit" class="download-btn" id="downloadBtn">
+                                <i class="fas fa-download"></i>
+                                <span>Tải xuống</span>
+                            </button>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <button type="button" class="action-btn" id="pasteBtn">
+                                <i class="fas fa-paste"></i>
+                                <span>Dán</span>
+                            </button>
+                            <button type="button" class="action-btn" id="clearBtn">
+                                <i class="fas fa-times"></i>
+                                <span>Xóa</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Content Sections -->
+            <div class="content-grid">
+                <!-- Video Info Section -->
+                <section class="info-section" id="infoSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Thông tin video
+                        </h2>
+                    </div>
+                    <div class="info-grid" id="infoGrid">
+                        <!-- Info items will be dynamically added here -->
+                    </div>
+                    <!-- Toggle button for mobile -->
+                    <button class="info-toggle-btn" id="infoToggleBtn" style="display: none;">
+                        <span class="toggle-text">Xem thêm</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+                </section>
+
+                <!-- Preview Section -->
+                <section class="preview-section" id="previewSection" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-eye"></i>
+                            Xem trước & Tải xuống
+                        </h2>
+                    </div>
+                    
+                    <div class="preview-content">
+                        <!-- Video Preview -->
+                        <div class="media-preview" id="videoPreview" style="display: none;">
+                            <div class="download-actions">
+                                <!-- Video Quality Buttons -->
+                                <a href="#" class="download-link primary" id="downloadVideoHD" download>
+                                    <i class="fas fa-video"></i>
+                                    <span>Tải Video</span>
+                                    <small class="quality-badge">HD</small>
+                                </a>
+                                <a href="#" class="download-link primary" id="downloadVideo" download>
+                                    <i class="fas fa-video"></i>
+                                    <span>Tải Video</span>
+                                    <small class="quality-badge">SD</small>
+                                </a>
+                                <a href="#" class="download-link secondary" id="downloadAudio" download>
+                                    <i class="fas fa-music"></i>
+                                    <span>Tải Audio</span>
+                                </a>
+                            </div>
+                            <div class="media-container">
+                                <img class="preview-image" id="videoThumbnail" alt="Video thumbnail">
+                                <div class="media-overlay">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Image Gallery Preview -->
+                        <div class="gallery-preview" id="imagePreview" style="display: none;">
+                            <div class="download-actions">
+                                <button class="download-link primary download-all-images-individually">
+                                    <i class="fas fa-images"></i>
+                                    <span>Tải lần lượt</span>
+                                    <small class="method-badge">Từng ảnh</small>
+                                </button>
+                                <button class="download-link secondary" id="downloadAllImages">
+                                    <i class="fas fa-file-archive"></i>
+                                    <span>Tải ZIP</span>
+                                    <small class="method-badge">Nén</small>
+                                </button>
+                            </div>
+                            <div class="gallery-grid" id="imageGallery">
+                                <!-- Images will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Features Section -->
+            <section class="features-section">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="feature-title">Tốc độ cao</h3>
+                        <p class="feature-description">Tải xuống nhanh chóng với tốc độ tối ưu</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">An toàn</h3>
+                        <p class="feature-description">Bảo mật thông tin và không lưu trữ dữ liệu</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Đa thiết bị</h3>
+                        <p class="feature-description">Hoạt động tốt trên mọi thiết bị và trình duyệt</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="brand">
+                        <i class="fas fa-download brand-icon"></i>
+                        <span class="brand-text">TikTok Downloader</span>
+                    </div>
+                    <p class="footer-description">
+                        Công cụ tải video TikTok miễn phí, nhanh chóng và đáng tin cậy.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Tính năng</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">Tải video HD</a></li>
+                        <li><a href="#" class="footer-link">Tải audio MP3</a></li>
+                        <li><a href="#" class="footer-link">Tải hình ảnh</a></li>
+                        <li><a href="#" class="footer-link">Không watermark</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Hỗ trợ</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#" class="footer-link">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="footer-link">Liên hệ</a></li>
+                        <li><a href="#" class="footer-link">Báo lỗi</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">
+                    © 2024 TikTok Downloader. Tất cả các quyền được bảo lưu.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Đang xử lý...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Error Modal -->
+    <div class="modal-overlay" id="errorModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Lỗi</h3>
+                <button class="modal-close" id="closeErrorModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message" id="errorMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" id="retryBtn">Thử lại</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Loader -->
+    <div class="custom-loader-overlay" id="customLoader">
+        <div class="loader">
+            <span><span></span><span></span><span></span><span></span></span>
+            <div class="base">
+                <span></span>
+                <div class="face"></div>
+            </div>
+        </div>
+        <div class="longfazers">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="loader-text" id="loaderText">
+            Đang xử lý...
+        </div>
+    </div>
+</body>
+</html>
