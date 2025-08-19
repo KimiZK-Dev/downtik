@@ -360,12 +360,19 @@
     font-weight: 500;
 }
 
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
+
+.music-preview-btn,
 .music-download-btn {
     flex-shrink: 0;
     width: 2rem;
     height: 2rem;
     border: none;
-    background-color: var(--accent-primary);
     color: white;
     border-radius: var(--radius-md);
     cursor: pointer;
@@ -376,17 +383,61 @@
     font-size: 0.75rem;
 }
 
+.music-preview-btn i,
+.music-download-btn i {
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    opacity: 1;
+}
+
+.music-preview-btn.icon-changing i {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.music-preview-btn {
+    background-color: var(--success);
+}
+
+.music-preview-btn:hover {
+    background-color: #16a085;
+    transform: scale(1.05);
+}
+
+.music-preview-btn.playing {
+    background-color: var(--warning);
+}
+
+.music-preview-btn.playing:hover {
+    background-color: #e67e22;
+}
+
+.music-preview-btn.loading {
+    background-color: var(--text-secondary);
+    cursor: wait;
+}
+
+.music-preview-btn.loading:hover {
+    background-color: var(--text-secondary);
+    transform: none;
+}
+
+.music-download-btn {
+    background-color: var(--accent-primary);
+}
+
 .music-download-btn:hover {
     background-color: var(--accent-hover);
     transform: scale(1.05);
 }
 
+.music-preview-btn.disabled,
 .music-download-btn.disabled {
     background-color: var(--text-tertiary);
     opacity: 0.6;
     cursor: not-allowed;
 }
 
+.music-preview-btn.disabled:hover,
 .music-download-btn.disabled:hover {
     background-color: var(--text-tertiary);
     transform: none;
@@ -450,13 +501,8 @@
     overflow: hidden;
     margin: 0 auto var(--space-6) auto;
     box-shadow: var(--shadow-lg);
-    transition: all var(--transition-normal);
 }
 
-.media-container:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
-}
 
 .preview-image {
     width: 100%;
@@ -925,7 +971,7 @@
 /* Quality Badge Styling */
 .quality-badge {
     position: absolute;
-    top: 4px;
+    top: 6px;
     right: 8px;
     color: white;
     font-size: 0.7rem;
@@ -936,12 +982,6 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* Music Section Badges */
-.music-header .quality-badge {
-    position: static;
-    margin-left: var(--space-2);
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-}
 
 .download-link:hover .quality-badge {
     transform: scale(1.05);
@@ -1000,32 +1040,65 @@
 }
 
 /* Quality Badge Mobile Responsive */
-@media (max-width: 768px) {
+/* iPad and tablet screens */
+@media (max-width: 1024px) and (min-width: 769px) {
     .quality-badge {
-        top: 2px;
-        right: 4px;
-        font-size: 0.65rem;
-        padding: 2px 6px;
-        border-radius: 8px;
+        top: 10px;
+        right: 10px;
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 10px;
+        z-index: 10;
     }
     
     .method-badge {
-        top: 2px;
-        right: 4px;
-        font-size: 0.6rem;
-        padding: 1px 4px;
-        border-radius: 6px;
+        top: 6px;
+        right: 10px;
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        border-radius: 8px;
+        z-index: 10;
     }
 }
 
+/* Mobile tablets and small screens */
+@media (max-width: 768px) {
+    .quality-badge {
+        top: 8px;
+        right: 10px;
+        font-size: 0.65rem;
+        padding: 3px 8px;
+        border-radius: 8px;
+        z-index: 10;
+        min-width: 24px;
+        text-align: center;
+    }
+    
+    .method-badge {
+        top: 4px;
+        right: 6px;
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        border-radius: 6px;
+        z-index: 10;
+        min-width: 20px;
+        text-align: center;
+    }
+}
+
+/* Small mobile phones */
 @media (max-width: 480px) {
     .quality-badge {
-        top: 1px;
-        right: 2px;
+        top: 8px;
+        right: 10px;
         font-size: 0.6rem;
-        padding: 1px 4px;
+        padding: 2px 6px;
         border-radius: 6px;
         letter-spacing: 0.1px;
+        z-index: 10;
+        min-width: 20px;
+        text-align: center;
+        line-height: 1.1;
     }
 }
 

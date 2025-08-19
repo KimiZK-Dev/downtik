@@ -14,6 +14,8 @@ export class DownloadManager {
         // Initialize sub-downloaders
         this.mediaDownloader = new MediaDownloader();
         this.imageDownloader = new ImageDownloader();
+        this.currentAudio = null;
+        this.currentPlayButton = null;
     }
 
     /**
@@ -57,6 +59,15 @@ export class DownloadManager {
                 const filename = btn.dataset.filename;
                 devLog('Music download from DOM:', url, filename);
                 this.handleMediaDownload(e, url, filename);
+            }
+
+            // Music preview
+            if (e.target.closest('.music-preview-btn:not(.disabled)')) {
+                e.preventDefault();
+                const btn = e.target.closest('.music-preview-btn');
+                const url = btn.dataset.url;
+                devLog('Music preview from DOM:', url);
+                this.handleMusicPreview(btn, url);
             }
 
             // Download all images as ZIP
@@ -211,5 +222,214 @@ export class DownloadManager {
     cancelAll() {
         this.mediaDownloader.cancelAll();
         this.imageDownloader.cancelAll();
+        this.stopCurrentAudio();
+    }
+
+    /**
+     * Handle music preview
+     */
+    async handleMusicPreview(button, url) {
+        try {
+            // If clicking the same button that's currently playing, stop it
+            if (this.currentPlayButton === button && this.currentAudio && !this.currentAudio.paused) {
+                devLog('Stopping current audio - same button clicked');
+                
+                // Remove event listeners to prevent conflicts
+                this.currentAudio.removeEventListener('canplay', this.currentAudioCanPlayHandler);
+                this.currentAudio.removeEventListener('ended', this.currentAudioEndedHandler);
+                this.currentAudio.removeEventListener('error', this.currentAudioErrorHandler);
+                
+                // Stop audio immediately
+                this.currentAudio.pause();
+                this.currentAudio.currentTime = 0;
+                this.currentAudio = null;
+                this.currentPlayButton = null;
+                
+                // Change icon to play
+                this.changeIconSmooth(button, 'fas fa-play');
+                
+                // Reset button state
+                setTimeout(() => {
+                    button.classList.remove('loading');
+                    button.title = 'Nghe thử';
+                }, 200);
+                
+                devLog('Audio stopped and icon changed to play');
+                return;
+            }
+
+            // Stop any other audio that might be playing
+            if (this.currentAudio && !this.currentAudio.paused) {
+                this.stopCurrentAudio();
+            }
+
+            // Create new audio element (always start from beginning)
+            this.currentAudio = new Audio();
+            this.currentPlayButton = button;
+
+            // Update button state to loading with smooth transition
+            const icon = button.querySelector('i');
+            const originalIcon = icon.className;
+            
+            this.changeIconSmooth(button, 'fas fa-spinner fa-spin');
+            button.classList.add('loading');
+
+            // Set up audio events with stored handlers
+            this.currentAudioCanPlayHandler = () => {
+                devLog('Audio can play - changing to pause icon');
+                this.changeIconSmooth(button, 'fas fa-pause');
+                button.classList.remove('loading');
+                button.title = 'Dừng phát';
+            };
+
+            this.currentAudioEndedHandler = () => {
+                devLog('Audio ended');
+                this.changeIconSmooth(button, 'fas fa-play');
+                setTimeout(() => {
+                    button.classList.remove('loading');
+                    button.title = 'Nghe thử';
+                }, 200);
+                this.currentPlayButton = null;
+                this.currentAudio = null;
+            };
+
+            this.currentAudioErrorHandler = (e) => {
+                devLog('Audio error:', e);
+                this.changeIconSmooth(button, 'fas fa-play');
+                setTimeout(() => {
+                    button.classList.remove('loading');
+                    button.title = 'Nghe thử';
+                }, 200);
+                this.currentPlayButton = null;
+                this.currentAudio = null;
+                
+                dispatchEvent(EVENTS.SHOW_TOAST, {
+                    message: 'Không thể phát nhạc. Vui lòng thử tải về để nghe.',
+                    type: 'warning'
+                });
+            };
+
+            this.currentAudio.addEventListener('loadstart', () => {
+                devLog('Audio loading started');
+            });
+
+            this.currentAudio.addEventListener('canplay', this.currentAudioCanPlayHandler);
+            this.currentAudio.addEventListener('ended', this.currentAudioEndedHandler);
+            this.currentAudio.addEventListener('error', this.currentAudioErrorHandler);
+
+            // Start playing
+            this.currentAudio.src = url;
+            this.currentAudio.volume = 0.7; // Set volume to 70%
+            await this.currentAudio.play();
+
+        } catch (error) {
+            devLog('Music preview error:', error);
+            this.resetPlayButton(button, 'fas fa-play');
+            
+            let errorMessage = 'Không thể phát nhạc';
+            if (error.name === 'NotAllowedError') {
+                errorMessage = 'Trình duyệt chặn tự động phát nhạc. Vui lòng thử lại.';
+            }
+            
+            dispatchEvent(EVENTS.SHOW_TOAST, {
+                message: errorMessage,
+                type: 'error'
+            });
+        }
+    }
+
+    /**
+     * Stop current audio
+     */
+    stopCurrentAudio() {
+        devLog('stopCurrentAudio called');
+        
+        if (this.currentAudio) {
+            // Remove event listeners to prevent conflicts
+            if (this.currentAudioCanPlayHandler) {
+                this.currentAudio.removeEventListener('canplay', this.currentAudioCanPlayHandler);
+            }
+            if (this.currentAudioEndedHandler) {
+                this.currentAudio.removeEventListener('ended', this.currentAudioEndedHandler);
+            }
+            if (this.currentAudioErrorHandler) {
+                this.currentAudio.removeEventListener('error', this.currentAudioErrorHandler);
+            }
+            
+            this.currentAudio.pause();
+            this.currentAudio.currentTime = 0;
+            this.currentAudio = null;
+            devLog('Audio stopped and reset');
+        }
+
+        if (this.currentPlayButton) {
+            devLog('Resetting play button to play icon');
+            // Direct icon change for other buttons
+            this.changeIconSmooth(this.currentPlayButton, 'fas fa-play');
+            setTimeout(() => {
+                this.currentPlayButton.classList.remove('loading');
+                this.currentPlayButton.title = 'Nghe thử';
+            }, 200);
+            this.currentPlayButton = null;
+        }
+        
+        // Clear event handlers
+        this.currentAudioCanPlayHandler = null;
+        this.currentAudioEndedHandler = null;
+        this.currentAudioErrorHandler = null;
+    }
+
+    /**
+     * Reset play button to default state
+     */
+    resetPlayButton(button, iconClass) {
+        const icon = button.querySelector('i');
+        icon.className = iconClass;
+        button.classList.remove('playing', 'loading');
+        button.title = 'Nghe thử';
+    }
+
+    /**
+     * Reset play button with smooth transition
+     */
+    resetPlayButtonSmooth(button, iconClass) {
+        this.changeIconSmooth(button, iconClass);
+        // Remove classes after icon change completes
+        setTimeout(() => {
+            button.classList.remove('playing', 'loading');
+            button.title = 'Nghe thử';
+        }, 200); // Wait for full transition to complete
+    }
+
+    /**
+     * Change icon with smooth fade transition
+     */
+    changeIconSmooth(button, newIconClass) {
+        const icon = button.querySelector('i');
+        const oldIconClass = icon.className;
+        
+        devLog(`Changing icon from "${oldIconClass}" to "${newIconClass}"`);
+        
+        // If already the same icon, don't change
+        if (oldIconClass === newIconClass) {
+            devLog('Same icon, skipping change');
+            return;
+        }
+        
+        // Add fade out class
+        button.classList.add('icon-changing');
+        
+        // Force reflow to ensure class is applied
+        button.offsetHeight;
+        
+        // Change icon after fade out
+        setTimeout(() => {
+            icon.className = newIconClass;
+            // Force reflow
+            icon.offsetHeight;
+            // Remove fade out class to fade in
+            button.classList.remove('icon-changing');
+            devLog(`Icon changed to "${newIconClass}"`);
+        }, 100); // Half of the CSS transition duration
     }
 }

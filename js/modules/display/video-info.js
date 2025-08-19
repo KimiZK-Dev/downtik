@@ -10,6 +10,8 @@ export class VideoInfoRenderer {
     constructor() {
         this.infoGrid = null;
         this.infoSection = null;
+        this.currentAudio = null;
+        this.currentPlayButton = null;
     }
 
     /**
@@ -219,20 +221,32 @@ export class VideoInfoRenderer {
                         <div class="music-artist">by ${this.escapeHtml(musicInfo.author)}</div>
                         <div class="music-duration">${durationText}</div>
                     </div>
-                    ${musicInfo.play && musicInfo.play !== '#' ? `
-                    <button class="music-download-btn" 
-                            data-url="${musicInfo.play}" 
-                            data-filename="music_${musicInfo.id || 'background'}.mp3"
-                            title="Tải nhạc nền">
-                        <i class="fas fa-download"></i>
-                    </button>
-                    ` : `
-                    <button class="music-download-btn disabled" 
-                            title="Nhạc nền không khả dụng"
-                            disabled>
-                        <i class="fas fa-ban"></i>
-                    </button>
-                    `}
+                    <div class="music-controls">
+                        ${musicInfo.play && musicInfo.play !== '#' ? `
+                        <button class="music-preview-btn" 
+                                data-url="${musicInfo.play}" 
+                                title="Nghe thử">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="music-download-btn" 
+                                data-url="${musicInfo.play}" 
+                                data-filename="music_${musicInfo.id || 'background'}.mp3"
+                                title="Tải nhạc nền">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        ` : `
+                        <button class="music-preview-btn disabled" 
+                                title="Nhạc nền không khả dụng"
+                                disabled>
+                            <i class="fas fa-ban"></i>
+                        </button>
+                        <button class="music-download-btn disabled" 
+                                title="Nhạc nền không khả dụng"
+                                disabled>
+                            <i class="fas fa-ban"></i>
+                        </button>
+                        `}
+                    </div>
                 </div>
             </div>
         `;

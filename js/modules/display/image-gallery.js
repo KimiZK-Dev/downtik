@@ -3,7 +3,7 @@
  * Handles image slideshow preview and gallery functionality
  */
 
-import { getElementById, devLog } from '../utils.js';
+import { getElementById, devLog, generateFilename } from '../utils.js';
 import { ELEMENT_IDS } from '../constants.js';
 
 export class ImageGalleryRenderer {
@@ -175,7 +175,7 @@ export class ImageGalleryRenderer {
         this.currentImages.forEach((imageData, index) => {
             const downloadUrl = this.renderMode === 'tikvid' ? imageData.downloadUrl : imageData.thumbnail;
             const imageIndex = this.renderMode === 'tikvid' ? imageData.index : index + 1;
-            const filename = `tiktok_image_${imageIndex}_${Date.now()}.jpg`;
+            const filename = generateFilename(`image_${imageIndex}`, 'jpg');
             
             // Add small delay between downloads to prevent overwhelming the browser
             setTimeout(() => {

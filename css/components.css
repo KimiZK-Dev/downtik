@@ -447,7 +447,7 @@
 .loader {
     position: absolute;
     top: 50%;
-    margin-left: -50px;
+    margin-left: -65px;
     left: 50%;
     animation: speeder 0.4s linear infinite;
 }
@@ -588,19 +588,32 @@
     animation-delay: -3s;
 }
 
-/* Loader Text */
+/* Loader Text - Enhanced UI */
 .custom-loader-overlay .loader-text {
     position: absolute;
-    bottom: 30%;
+    bottom: 25%;
     left: 50%;
     transform: translateX(-50%);
     color: #ffffff;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.2rem;
+    font-weight: 600;
     text-align: center;
-    animation: pulse 1.5s ease-in-out infinite alternate;
+    animation: loaderTextGlow 2s ease-in-out infinite alternate;
     white-space: nowrap;
     z-index: 10;
+    background: linear-gradient(135deg, #ffffff, #e3f2fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-text-fill-color: white;
+    min-width: 200px;
 }
 
 
@@ -721,12 +734,58 @@
     }
 }
 
-/* Text Pulse Animation */
+/* Enhanced Loader Text Animation */
+@keyframes loaderTextGlow {
+    0% {
+        opacity: 0.7;
+        transform: translateX(-50%) scale(0.98);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.02);
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    }
+}
+
+/* Text Pulse Animation (fallback) */
 @keyframes pulse {
     0% {
         opacity: 0.6;
     }
     100% {
         opacity: 1;
+    }
+}
+
+/* Loader Text Mobile Responsive */
+@media (max-width: 768px) {
+    .custom-loader-overlay .loader-text {
+        bottom: 20%;
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+        min-width: 180px;
+        letter-spacing: 0.3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-loader-overlay .loader-text {
+        bottom: 15%;
+        font-size: 0.9rem;
+        padding: 0.3rem 0.6rem;
+        min-width: 160px;
+        letter-spacing: 0.2px;
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 360px) {
+    .custom-loader-overlay .loader-text {
+        bottom: 12%;
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+        min-width: 140px;
+        letter-spacing: 0.1px;
     }
 }

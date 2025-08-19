@@ -103,12 +103,43 @@ export const sanitizeFilename = (filename) => {
 };
 
 /**
- * Generate unique filename with timestamp
+ * Generate unique filename with kimizk branding and random 5-character ID
  */
 export const generateFilename = (prefix, extension) => {
-    const timestamp = Date.now();
-    const randomId = Math.random().toString(36).substring(2, 8);
-    return `${prefix}_${timestamp}_${randomId}.${extension}`;
+    // Generate random ID with mixed letters and numbers
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let randomId = '';
+    
+    for (let i = 0; i < 5; i++) {
+        randomId += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    // Map prefixes to kimizk format
+    let kimizKPrefix = prefix;
+    if (prefix.includes('video')) {
+        if (prefix.includes('hd') || prefix.includes('HD')) {
+            kimizKPrefix = 'kimizk-vid(hd)';
+        } else if (prefix.includes('sd') || prefix.includes('SD')) {
+            kimizKPrefix = 'kimizk-vid(sd)';
+        } else {
+            kimizKPrefix = 'kimizk-vid';
+        }
+    } else if (prefix.includes('image') || prefix.includes('pic')) {
+        kimizKPrefix = 'kimizk-pic';
+    } else if (prefix.includes('audio') || prefix.includes('music') || prefix.includes('mp3')) {
+        kimizKPrefix = 'kimizk-au';
+    } else if (prefix.includes('tiktok')) {
+        // Handle legacy tiktok prefixes
+        if (prefix.includes('video')) {
+            kimizKPrefix = 'kimizk-vid';
+        } else if (prefix.includes('image')) {
+            kimizKPrefix = 'kimizk-pic';
+        } else {
+            kimizKPrefix = 'kimizk-vid'; // default for tiktok content
+        }
+    }
+    
+    return `${kimizKPrefix}-${randomId}.${extension}`;
 };
 
 /**

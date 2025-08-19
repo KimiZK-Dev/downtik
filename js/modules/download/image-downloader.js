@@ -16,7 +16,7 @@ export class ImageDownloader {
      * Download single image
      */
     async downloadSingleImage(imageUrl, index = 0) {
-        const filename = generateFilename(`tiktok_image_${index + 1}`, 'jpg');
+        const filename = generateFilename(`image_${index + 1}`, 'jpg');
         const downloadId = `image_${index}_${Date.now()}`;
         
         this.activeDownloads.add(downloadId);
@@ -363,7 +363,7 @@ export class ImageDownloader {
 
             devLog(`ZIP file generated: ${content.size} bytes`);
 
-            const filename = generateFilename('tiktok_images', 'zip');
+            const filename = generateFilename('images', 'zip');
             this.downloadBlob(content, filename);
 
             dispatchEvent(EVENTS.SHOW_TOAST, {

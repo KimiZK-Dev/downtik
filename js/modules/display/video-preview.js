@@ -3,7 +3,7 @@
  * Handles video preview and playback functionality
  */
 
-import { getElementById, dispatchEvent, devLog, devWarn } from '../utils.js';
+import { getElementById, dispatchEvent, devLog, devWarn, generateFilename } from '../utils.js';
 import { ELEMENT_IDS, EVENTS } from '../constants.js';
 
 export class VideoPreviewRenderer {
@@ -117,7 +117,7 @@ export class VideoPreviewRenderer {
         }
 
         downloadVideo.style.display = 'block';
-        const filename = `tiktok_video_${Date.now()}.mp4`;
+        const filename = generateFilename('video-sd', 'mp4');
         
         downloadVideo.href = '#';
         downloadVideo.download = filename;
@@ -238,7 +238,7 @@ export class VideoPreviewRenderer {
             return;
         }
 
-        const filename = `tiktok_video_${hdQuality.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}.mp4`;
+        const filename = generateFilename('video-hd', 'mp4');
         
         downloadVideoHD.href = '#';
         downloadVideoHD.download = filename;
@@ -321,7 +321,7 @@ export class VideoPreviewRenderer {
         }
 
         downloadAudio.style.display = 'block';
-        const filename = `tiktok_audio_${Date.now()}.mp3`;
+        const filename = generateFilename('audio', 'mp3');
         
         downloadAudio.href = '#';
         downloadAudio.download = filename;
